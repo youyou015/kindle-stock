@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Kindle 自动刷新 -->
+  <meta http-equiv="refresh" content="60">
+
+  <title>ZM Stock</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background: white;
+      color: black;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    #symbol {
+      font-size: 90px;
+      font-weight: bold;
+      margin-top: 40px;
+    }
+
+    #price {
+      font-size: 140px;
+      margin-top: 40px;
+      font-weight: bold;
+    }
+
+    #change {
+      font-size: 50px;
+      margin-top: 30px;
+    }
+
+    #time {
+      font-size: 28px;
+      margin-top: 80px;
+      color: gray;
+    }
+
+    .up {
+      color: black;
+    }
+
+    .down {
+      color: gray;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="symbol">ZM</div>
+
+  <div id="price">--</div>
+
+  <div id="change">Loading...</div>
+
+  <div id="time"></div>
+
+  <script>
+    async function loadStock() {
+      try {
+        const res = await fetch(
+          "https://query1.finance.yahoo.com/v8/finance/chart/ZM"
+        );
+
+        const data = await res.json();
+
+        const meta = data.chart.result[0].meta;
+
+        const price = meta.regularMarketPrice;
+        const prev = meta.previousClose;
+
+        const diff = price - prev;
+        const percent = (diff / prev) * 100;
+
+        document.getElementById("price").innerText =
+          "$" + price.toFixed(2);
+
+        const changeEl = document.getElementById("change");
+
+        changeEl.innerText =
+          (diff >= 0 ? "+" : "") +
+          diff.toFixed(2) +
+          " (" +
+          percent.toFixed(2) +
+          "%)";
+
+        changeEl.className =
+          diff >= 0 ? "up" : "down";
+
+        document.getElementById("time").innerText =
+          "Updated: " +
+          new Date().toLocaleTimeString();
+
+      } catch (e) {
+        document.getElementById("change").innerText =
+          "Load failed";
+      }
+    }
+
+    loadStock();
+  </script>
+</body>
+</html>
