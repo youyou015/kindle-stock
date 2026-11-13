@@ -1,0 +1,10 @@
+{
+    "items": [
+        {
+            "name": "启动作业看板（省电休眠模式）",
+            "priority": 1,
+            "action": "/mnt/us/extensions/homework/start.sh",
+            "exitmenu": true
+        }
+    ]
+}
